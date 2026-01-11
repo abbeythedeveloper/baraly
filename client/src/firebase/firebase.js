@@ -6,7 +6,7 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAQrWndG-D6ikISFSsapQFxhZoXSao6coM",
+    apiKey: import.meta.env.VITE_FIREBASE_CONNECT_KEY,
     authDomain: "baralyapp.firebaseapp.com",
     projectId: "baralyapp",
     storageBucket: "baralyapp.firebasestorage.app",
