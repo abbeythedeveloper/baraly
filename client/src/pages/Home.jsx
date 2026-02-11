@@ -46,7 +46,7 @@ export default function Home() {
     }, [currentUser]);
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-10 md:px-10">
+        <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8">
             <div className="mx-auto max-w-5xl space-y-8">
                 {/* Greeting */}
                 <div>

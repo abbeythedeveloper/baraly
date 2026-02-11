@@ -11,6 +11,8 @@ import Home from "./pages/Home.jsx";
 import Requests from "./pages/Requests.jsx";
 import AssetsLibrary from "./pages/AssetsLibrary.jsx";
 import Tools from "./pages/Tools.jsx";
+import PostIdeaGenerator from "./components/AItools/PostIdeaGenerator.jsx";
+import ShootGuideTool from "./components/AItools/ShootGuideTool.jsx";
 import SubscriptionPage from "./pages/SubscriptionPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
@@ -54,6 +56,8 @@ const App = () => {
             <Route path="chat" element={<Chat />} />
             <Route path="calendar" element={<ContentCaleder />} />
             <Route path="tools" element={<Tools />} />
+            <Route path="tools/post-idea-generator" element={<PostIdeaGenerator />} />
+            <Route path="tools/shoot-guide" element={<ShootGuideTool />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="subscription" element={<SubscriptionPage />} />
             <Route path="checkout" element={<CheckoutPage />} />

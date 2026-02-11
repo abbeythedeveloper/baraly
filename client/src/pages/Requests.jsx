@@ -16,8 +16,8 @@ const Requests = () => {
             : "new";
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-10 md:px-10">
-            <div className="max-w-6xl space-y-4">
+        <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8">
+            <div className="mx-auto max-w-5xl space-y-8">
                 <RequestsHeader />
                 <RequestsTabs activeTab={activeTab} />
 
