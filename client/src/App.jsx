@@ -2,6 +2,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/authContext";
 import AuthPage from "./pages/AuthPage.jsx";
+import Verify2FA from "./pages/Verify2FA.jsx"
+import Setup2FA from "./pages/Setup2FA.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DashboardLayout from "./components/DashboardLayout.jsx";
@@ -20,6 +22,7 @@ import Chat from "./pages/Chat.jsx";
 import ContentCaleder from "./pages/ContentCaleder.jsx";
 import { Toaster } from "react-hot-toast";
 import RegionDevToggle from "./components/dev/RegionDevToggle";
+import VerifyEmailPage from "./pages/VerifyEmailPage.jsx";
 
 const App = () => {
 
@@ -32,6 +35,9 @@ const App = () => {
         <Routes>
 
           {/* AUTH ROUTES — no sidebar */}
+          <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/auth/2fa" element={<Verify2FA />} />
+          <Route path="/auth/setup-2fa" element={<Setup2FA />} />
           <Route path="/auth/*" element={<AuthPage />} />
           <Route path="/" element={<Navigate to="/auth/login" replace />} />
 

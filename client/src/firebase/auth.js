@@ -6,6 +6,10 @@ import {
     signInWithPopup,
     signOut,
 } from "firebase/auth";
+import { db } from "./firebase.js";
+import { doc, getDoc } from "firebase/firestore";
+
+
 import toast from "react-hot-toast";
 import { ensureUserDocument } from "./ensureUserDocument";
 
@@ -17,6 +21,7 @@ export const doCreateUserWithEmailAndPassword = async (
     password,
     name
 ) => {
+
     const userCred = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -29,39 +34,60 @@ export const doCreateUserWithEmailAndPassword = async (
     });
 
     toast.success("Account created successfully!");
+
     return userCred;
 };
+
 
 // ==========================
 // SIGN IN (Email + Password)
 // ==========================
 export const doSignInWithEmailAndPassword = async (email, password) => {
-    const result = await signInWithEmailAndPassword(auth, email, password);
 
-    // Ensure document exists even for legacy users
-    await ensureUserDocument(result.user);
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
 
-    toast.success("Logged in successfully!");
-    return result;
+    if (!userCred.user.emailVerified) {
+        await signOut(auth);
+        throw new Error("Please verify your email first.");
+    }
+
+    const snap = await getDoc(doc(db, "users", userCred.user.uid));
+    const data = snap.data();
+
+    return {
+        user: userCred.user,
+        twoFactorEnabled: data?.twoFactorEnabled || false
+    };
+
 };
+
 
 // ==========================
 // GOOGLE SIGN IN
 // ==========================
 export const doSignInWithGoogle = async () => {
+
     const provider = new GoogleAuthProvider();
+
     const result = await signInWithPopup(auth, provider);
 
-    await ensureUserDocument(result.user); // 🔑 SINGLE SOURCE OF TRUTH
+    await ensureUserDocument(result.user);
 
     toast.success("Signed in with Google!");
+
     return result;
 };
+
 
 // ==========================
 // SIGN OUT
 // ==========================
 export const doSignOut = async () => {
+
+    sessionStorage.removeItem("2fa_verified");
+
     await signOut(auth);
+
     toast.success("You have been logged out.");
+
 };

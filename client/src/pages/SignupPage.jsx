@@ -1,12 +1,13 @@
 // src/pages/SignUpPage.jsx
 import { useState, useRef, useEffect } from "react";
-import { Link, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { logo } from "../assets/assets.js";
 import {
     doCreateUserWithEmailAndPassword,
     doSignInWithGoogle,
 } from "../firebase/auth.js";
+import { sendEmailVerification } from "firebase/auth";
 import { useAuth } from "../contexts/authContext/UseAuth.jsx";
 import toast from "react-hot-toast";
 import { evaluatePassword } from "../utils/passwordStrength";
@@ -82,7 +83,9 @@ const SignUpPage = () => {
                 password,
                 name
             );
-            navigate("/app/home", { replace: true });
+
+            await sendEmailVerification(userCred.user);
+            navigate("/auth/verify-email", { replace: true });
         } catch (err) {
             console.error("Sign up error:", err);
             toast.error(err?.message || "Failed to create account. Please try again.");

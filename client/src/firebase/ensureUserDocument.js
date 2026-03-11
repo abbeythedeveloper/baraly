@@ -14,6 +14,7 @@ export async function ensureUserDocument(user) {
             name: user.displayName ?? "",
             avatar: user.photoURL ?? null,
             brandName: "",
+            twoFactorEnabled: false,
             subscription: {
                 status: "inactive",
                 planCode: null,

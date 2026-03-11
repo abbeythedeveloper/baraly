@@ -4,7 +4,7 @@ import GenerateIdeasSection from "./PostIdeaGen/GenerateIdeasSection";
 import GenerateIdeaResultCard from "./PostIdeaGen/GenerateIdeaResultCard";
 import HowToUse from "./HowToUse";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import AddToCalendarModal from "./PostIdeaGen/AddToCalendarModal";
 import { generatePostIdea } from "../../Services/postIdeaService";
 
 const PostIdeaGenerator = () => {
@@ -122,113 +122,13 @@ const PostIdeaGenerator = () => {
                 {/* How to Use */}
                 <HowToUse />
             </div>
-            <AnimatePresence>
-                {isCalendarModalOpen && (
 
-                    <motion.div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            transition={{ duration: 0.2 }}
-                            className="w-full max-w-lg rounded-xl bg-white shadow-xl"
-                        >
+            <AddToCalendarModal
+                isOpen={isCalendarModalOpen}
+                onClose={() => setIsCalendarModalOpen(false)}
+                generatedIdea={generatedIdea}
+            />
 
-                            {/* Header */}
-                            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-                                <h3 className="text-sm font-semibold text-slate-900">
-                                    Add Post Idea to Calendar
-                                </h3>
-
-                                <button
-                                    onClick={() => setIsCalendarModalOpen(false)}
-                                    className="text-slate-500 hover:text-slate-900"
-                                >
-                                    <X className="h-5 w-5" />
-                                </button>
-                            </div>
-
-                            {/* Body */}
-                            <div className="px-6 py-5 space-y-4">
-
-                                {/* Info Notice */}
-                                <div className="flex items-start gap-3 rounded-md bg-blue-50 p-3 text-sm text-blue-700">
-                                    <Info className="h-4 w-4 mt-0.5" />
-                                    Adding to the calendar is for personal planning only. To request professional services, contact the team.
-                                </div>
-
-                                {/* Content Name */}
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700" value={generatedIdea?.title || ""}
-                                    >
-
-                                    </label>
-                                    <input
-                                        defaultValue="Day in the Life Vlog"
-                                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    />
-                                </div>
-
-                                {/* Platform */}
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700" value={generatedIdea?.platforms.join(" / ") || ""}
-                                    >
-                                    </label>
-                                    <input
-                                        defaultValue="YouTube / Instagram"
-                                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    />
-                                </div>
-
-                                {/* Description */}
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700" value={generatedIdea?.summary || ""}
-                                    >
-                                    </label>
-                                    <textarea
-                                        rows={2}
-                                        defaultValue="Take viewers through a typical work day"
-                                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    />
-                                </div>
-
-                                {/* Caption */}
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-slate-700" value={generatedIdea?.caption || ""}
-                                    >
-                                    </label>
-                                    <textarea
-                                        rows={3}
-                                        defaultValue="Come work with me today! ☕ Here's what a day in my life really looks like..."
-                                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    />
-                                </div>
-
-                            </div>
-
-                            {/* Footer */}
-                            <div className="flex justify-end gap-3 border-t border-slate-200 px-6 py-4">
-                                <button
-                                    onClick={() => setIsCalendarModalOpen(false)}
-                                    className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                                >
-                                    Cancel
-                                </button>
-
-                                <button className="rounded-md bg-[#13BF9E] px-4 py-2 text-sm font-medium text-white hover:bg-[#13BF9E]/90">
-                                    Add to Calendar
-                                </button>
-                            </div>
-
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
         </div>
     );

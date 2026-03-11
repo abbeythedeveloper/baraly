@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { logo } from '../assets/assets.js';
 
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth.js';
+import { db } from '../firebase/firebase.js';
+import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext/UseAuth.jsx';
 
 const LoginPage = () => {
@@ -16,12 +18,6 @@ const LoginPage = () => {
 
     const location = useLocation();
     const isLoginPage = location.pathname === '/' || location.pathname === '/auth/login';
-
-    useEffect(() => {
-        if (currentUser) {
-            navigate("/app/dashboard", { replace: true });
-        }
-    }, [currentUser, navigate]);
 
 
     // 🔥 Ripple State + Container Ref
@@ -42,10 +38,22 @@ const LoginPage = () => {
         if (isSigningIn) return;
 
         setIsSigningIn(true);
+
         try {
-            await doSignInWithEmailAndPassword(email, password);
-            // DO NOT navigate here — auth listener handles it
+
+            const result = await doSignInWithEmailAndPassword(email, password);
+
+            const snap = await getDoc(doc(db, "users", result.user.uid));
+            const data = snap.data();
+
+            if (data?.twoFactorEnabled) {
+                navigate("/auth/2fa");
+            } else {
+                navigate("/app/setup-2fa");
+            }
+
         } catch (err) {
+            console.error(err);
             setIsSigningIn(false);
         }
     };
