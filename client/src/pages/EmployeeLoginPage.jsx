@@ -51,7 +51,7 @@ const EmployeeLoginPage = () => {
           {/* Email */}
           <div>
             <label className="block text-[13px] font-medium text-black mb-2">
-              Email
+              Emails
             </label>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
