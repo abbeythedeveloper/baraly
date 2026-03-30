@@ -95,21 +95,20 @@ const SignUpPage = () => {
     };
 
     // Handle Google sign-in
-    const onGoogleSignIn = async (e) => {
-        e.preventDefault();
-        if (isRegistering) return;
+const onGoogleSignIn = async (e) => {
+    e.preventDefault();
+    if (isRegistering) return;
 
-        try {
-            setIsRegistering(true);
-            await doSignInWithGoogle();
-            navigate("/app/home", { replace: true });
-        } catch (err) {
-            console.error("Google sign in error:", err);
-            toast.error(err?.message || "Google sign-in failed. Please try again.");
-        } finally {
-            setIsRegistering(false);
-        }
-    };
+    try {
+        setIsRegistering(true);
+        await doSignInWithGoogle();
+        // no navigate here — page redirects to Google automatically
+    } catch (err) {
+        console.error("Google sign in error:", err);
+        toast.error(err?.message || "Google sign-in failed. Please try again.");
+        setIsRegistering(false);
+    }
+};
 
     // Already signed in -> redirect
     useEffect(() => {

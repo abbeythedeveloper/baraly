@@ -1,10 +1,13 @@
 const { setGlobalOptions } = require("firebase-functions");
-const { onRequest } = require("firebase-functions/v2/https");
+const { onRequest, onCall } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");
 const crypto = require("crypto");
 
-setGlobalOptions({ maxInstances: 10 });
+setGlobalOptions({ 
+    maxInstances: 10,
+    cors: true 
+});
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -75,14 +78,6 @@ exports.paystackWebhook = onRequest(
                                 new Date(data.next_payment_date)
                             );
                     }
-                    if (!pending) {
-                        console.error("Missing pendingSubscription");
-                        return res.sendStatus(200);
-                    }
-                    // cleanup
-                    pendingSubscription: admin.firestore.FieldValue.delete(),
-
-
                         await userRef.set(
                             {
                                 subscription: {
@@ -165,6 +160,70 @@ exports.paystackWebhook = onRequest(
         } catch (err) {
             console.error("Webhook error:", err);
             return res.sendStatus(500);
+        }
+    }
+);
+exports.generatePostIdea = onCall(
+    {
+        maxInstances: 10,
+        secrets: ["OPENAI_API_KEY"],
+    },
+    async (request) => {
+        if (!request.auth) {
+            throw new Error("Unauthenticated");
+        }
+
+        const { mediaType, ideaPrompt } = request.data;
+        const OPENAI_KEY = process.env.OPENAI_API_KEY;
+
+        const prompt = `You are a professional social media strategist.
+
+Generate ONE high quality content idea.
+
+MEDIA TYPE:
+${mediaType || "Any"}
+
+USER DIRECTION:
+${ideaPrompt || "Completely random idea"}
+
+Return ONLY valid JSON in this structure:
+
+{
+  "title": "",
+  "summary": "",
+  "platforms": [],
+  "category": "",
+  "mediaType": "",
+  "caption": "",
+  "tips": []
+}`;
+
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${OPENAI_KEY}`,
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                temperature: 0.8,
+                messages: [{ role: "user", content: prompt }],
+            }),
+        });
+
+        if (!response.ok) {
+            const err = await response.text();
+            console.error("OpenAI error:", err);
+            throw new Error("OpenAI request failed");
+        }
+
+        const data = await response.json();
+        const text = data.choices[0].message.content;
+
+        try {
+            return JSON.parse(text.replace(/```json|```/g, "").trim());
+        } catch {
+            throw new Error("Failed to parse OpenAI response");
         }
     }
 );

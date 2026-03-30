@@ -3,7 +3,8 @@ import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithEmailAndPassword,
-    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     signOut,
 } from "firebase/auth";
 import { db } from "./firebase.js";
@@ -66,18 +67,10 @@ export const doSignInWithEmailAndPassword = async (email, password) => {
 // GOOGLE SIGN IN
 // ==========================
 export const doSignInWithGoogle = async () => {
-
     const provider = new GoogleAuthProvider();
-
-    const result = await signInWithPopup(auth, provider);
-
-    await ensureUserDocument(result.user);
-
-    toast.success("Signed in with Google!");
-
-    return result;
+    await signInWithRedirect(auth, provider);
+    // page will redirect to Google and come back
 };
-
 
 // ==========================
 // SIGN OUT

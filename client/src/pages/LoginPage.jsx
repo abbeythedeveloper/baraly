@@ -59,17 +59,18 @@ const LoginPage = () => {
     };
 
 
-    const onGoogleSignIn = async (e) => {
-        e.preventDefault();
-        if (isSigningIn) return;
+const onGoogleSignIn = async (e) => {
+    e.preventDefault();
+    if (isSigningIn) return;
 
-        setIsSigningIn(true);
-        try {
-            await doSignInWithGoogle();
-        } catch (err) {
-            setIsSigningIn(false);
-        }
-    };
+    setIsSigningIn(true);
+    try {
+        await doSignInWithGoogle();
+        // no navigate — redirect handles it
+    } catch (err) {
+        setIsSigningIn(false);
+    }
+};
 
 
     // const handleGoogleSignIn = () => {
