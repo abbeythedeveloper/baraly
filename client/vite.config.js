@@ -12,9 +12,5 @@ export default defineConfig({
     allowedHosts: [
       "unrecaptured-templelike-karen.ngrok-free.dev",
     ],
-    headers: {
-      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
-      "Cross-Origin-Embedder-Policy": "unsafe-none",
-    }
   },
 })

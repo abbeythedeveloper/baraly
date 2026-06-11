@@ -3,14 +3,11 @@ import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithEmailAndPassword,
-    signInWithRedirect,
-    getRedirectResult,
+    signInWithPopup,
     signOut,
 } from "firebase/auth";
 import { db } from "./firebase.js";
 import { doc, getDoc } from "firebase/firestore";
-
-
 import toast from "react-hot-toast";
 import { ensureUserDocument } from "./ensureUserDocument";
 
@@ -68,10 +65,13 @@ export const doSignInWithEmailAndPassword = async (email, password) => {
 // ==========================
 export const doSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    await signInWithRedirect(auth, provider);
-    // page will redirect to Google and come back
+    const result = await signInWithPopup(auth, provider);
+    await ensureUserDocument(result.user);
+    // Google users skip 2FA — mark as verified immediately
+    sessionStorage.setItem("2fa_verified", "true");
+    toast.success("Signed in with Google!");
+    return result;
 };
-
 // ==========================
 // SIGN OUT
 // ==========================

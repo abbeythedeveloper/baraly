@@ -66,8 +66,9 @@ const onGoogleSignIn = async (e) => {
     setIsSigningIn(true);
     try {
         await doSignInWithGoogle();
-        // no navigate — redirect handles it
+        navigate("/app/dashboard");
     } catch (err) {
+        console.error(err);
         setIsSigningIn(false);
     }
 };
